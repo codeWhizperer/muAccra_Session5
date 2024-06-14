@@ -3,7 +3,8 @@ use core::result::ResultTrait;
 use core::option::OptionTrait;
 use core::traits::TryInto;
 use starknet::{ContractAddress};
-use snforge_std::{declare, ContractClassTrait, start_prank, stop_prank, CheatTarget};
+use snforge_std::{declare, ContractClassTrait, start_cheat_caller_address, stop_cheat_caller_address
+};
 use muaccratestingsession::token::TOKEN;
 use muaccratestingsession::interface::IERC20::{IERC20Dispatcher, IERC20DispatcherTrait};
 use muaccratestingsession::interface::IToken::{ITokenTraitDispatcher, ITokenTraitDispatcherTrait};
@@ -22,10 +23,10 @@ fn setup() -> ContractAddress {
     ADMIN.serialize(ref calldata);
     let contract = declare("TOKEN").unwrap();
     let (contract_address, _) = contract.deploy(@calldata).unwrap();
-    start_prank(CheatTarget::One(contract_address), ADMIN.try_into().unwrap());
+    start_cheat_caller_address(contract_address, ADMIN.try_into().unwrap());
     let dispatcher = ITokenTraitDispatcher { contract_address };
     dispatcher.mint_token(USER_ONE.try_into().unwrap(), 10000);
-    stop_prank(CheatTarget::One(contract_address));
+    stop_cheat_caller_address(contract_address);
 
     // return address
     contract_address
@@ -67,13 +68,13 @@ fn test_user_one_balance() {
 }
 
 // #[test]
-fn transfer_from_userone_to_usertwo() {
-    let contract_address = setup();
-    let _dispatcher = IERC20Dispatcher { contract_address };
-    start_prank(CheatTarget::One(contract_address), USER_ONE.try_into().unwrap());
-    // logic here 
-    stop_prank(CheatTarget::One(contract_address),);
-}
+// fn transfer_from_userone_to_usertwo() {
+//     let contract_address = setup();
+//     let _dispatcher = IERC20Dispatcher { contract_address };
+//     start_prank(CheatTarget::One(contract_address), USER_ONE.try_into().unwrap());
+//     // logic here 
+//     stop_prank(CheatTarget::One(contract_address),);
+// }
 
 
 fn to_address(name:felt252) -> ContractAddress{
