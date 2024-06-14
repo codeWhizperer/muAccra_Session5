@@ -1,3 +1,5 @@
+use core::option::OptionTrait;
+use core::traits::TryInto;
 use starknet::{ContractAddress};
 use snforge_std::{declare, ContractClassTrait, start_prank, stop_prank, CheatTarget};
 use muaccratestingsession::token::TOKEN;
@@ -8,22 +10,12 @@ const USER_TWO: felt252 = 'Kofi';
 
 
 fn setup() -> ContractAddress {
-    let Name: ByteArray = "MuAccra";
-    let Symbol: ByteArray = "MAKT";
-    let Admin: felt252 = 'HUB';
-    let contract = declare("TOKEN").unwrap();
-    let mut calldata: Array<felt252> = array![];
-    Name.serialize(ref calldata);
-    Symbol.serialize(ref calldata);
-    Admin.serialize(ref calldata);
-
-    let (contract_address, _) = contract.deploy(@calldata).unwrap();
-    let dispatcher = ITokenTraitDispatcher { contract_address };
-
-    start_prank(CheatTarget::One(contract_address), Admin.try_into().unwrap());
-    dispatcher.mint_token(USER_ONE.try_into().unwrap(), 10000);
-    stop_prank(CheatTarget::One(contract_address),);
-    contract_address
+    // TODO: declare the contract
+    // deploy contract
+    // prank admin
+    // mint to user
+    // return address
+    0.try_into().unwrap()
 }
 
 
